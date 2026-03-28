@@ -68,3 +68,34 @@ export const loginUsuario = async (req, res) => {
         res.status(500).json({ mensaje: "Error al intentar loguear" });
     }
 };
+
+export const obtenerUsuarios = async (req, res) => {
+    try {
+        const usuarios = await Usuario.find({}, '-password');
+        res.status(200).json(usuarios);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener los usuarios" });
+    }
+};
+
+
+export const suspenderUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { activo } = req.body;
+        const usuario = await Usuario.findByIdAndUpdate(id, { activo }, { new: true });
+        res.status(200).json({ mensaje: "Estado actualizado", usuario });
+    } catch (error) {
+        res.status(400).json({ mensaje: "Error al cambiar estado" });
+    }
+};
+
+
+export const eliminarUsuario = async (req, res) => {
+    try {
+        await Usuario.findByIdAndDelete(req.params.id);
+        res.status(200).json({ mensaje: "Usuario eliminado" });
+    } catch (error) {
+        res.status(400).json({ mensaje: "Error al eliminar" });
+    }
+};
