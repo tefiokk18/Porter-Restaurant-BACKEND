@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import usuariosRoutes from './src/routes/usuarios.routes.js';
+import reservasRoutes from './src/routes/reservas.routes.js';
 
 dotenv.config();
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 
 
 app.use('/api', usuariosRoutes);
+app.use('/api', reservasRoutes);
 
 
 const mongoURI = process.env.MONGO_URI;
