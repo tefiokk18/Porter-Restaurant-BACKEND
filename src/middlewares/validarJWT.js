@@ -11,13 +11,16 @@ const validarJWT = (req, res, next) => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET);
+
         req.id = payload.uid;
         req.nombre = payload.nombre;
-        next();
+        req.rol = payload.rol; 
+
+        next(); 
         
     } catch (error) {
         return res.status(401).json({
-            mensaje: "Token no válido"
+            mensaje: "Token no válido o expirado"
         });
     }
 };
