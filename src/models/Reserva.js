@@ -5,15 +5,22 @@ const reservaSchema = new Schema({
         type: String, 
         required: true
     },
-    hora: {
+
+    horario: {
         type: String,
         required: true
     },
-    personas: {
+
+    comensales: {
         type: Number,
         required: true,
         min: 1,
         max: 10
+    },
+    sucursal: {
+        type: String,
+        required: true,
+        enum: ['Yerba Buena', 'Centro'] 
     },
     nombreCompleto: {
         type: String,

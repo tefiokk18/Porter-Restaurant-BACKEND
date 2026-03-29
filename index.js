@@ -27,3 +27,9 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
+
+app.use((req, res) => {
+    res.status(404).json({
+        mensaje: "Lo sentimos, la ruta solicitada no existe en el servidor de Porter."
+    });
+});

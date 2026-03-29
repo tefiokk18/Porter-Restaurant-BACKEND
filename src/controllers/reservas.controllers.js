@@ -1,16 +1,16 @@
 import Reserva from '../models/Reserva.js';
 
-
 export const crearReserva = async (req, res) => {
     try {
-        const { fecha, hora } = req.body;
+
+        const { fecha, horario, sucursal } = req.body;
 
 
-        const reservaExistente = await Reserva.findOne({ fecha, hora });
+        const reservaExistente = await Reserva.findOne({ fecha, horario, sucursal });
 
         if (reservaExistente) {
             return res.status(400).json({
-                mensaje: "Lo sentimos, ya existe una reserva para esa fecha y hora. Por favor, elegí otro horario."
+                mensaje: "Lo sentimos, ya existe una reserva para esa fecha, hora y sucursal. Por favor, elegí otro horario o sucursal."
             });
         }
 
@@ -27,7 +27,6 @@ export const crearReserva = async (req, res) => {
     }
 };
 
-
 export const obtenerReservas = async (req, res) => {
     try {
         const reservas = await Reserva.find();
@@ -37,7 +36,6 @@ export const obtenerReservas = async (req, res) => {
         res.status(500).json({ mensaje: "Error al obtener las reservas" });
     }
 };
-
 
 export const editarReserva = async (req, res) => {
     try {
