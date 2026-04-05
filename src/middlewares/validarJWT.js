@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const validarJWT = (req, res, next) => {
+   
     const token = req.header('x-token');
 
     if (!token) {
@@ -10,8 +11,10 @@ const validarJWT = (req, res, next) => {
     }
 
     try {
+      
         const payload = jwt.verify(token, process.env.JWT_SECRET);
 
+       
         req.id = payload.uid;
         req.nombre = payload.nombre;
         req.rol = payload.rol; 
@@ -19,6 +22,7 @@ const validarJWT = (req, res, next) => {
         next(); 
         
     } catch (error) {
+        console.error("Error al validar el JWT:", error.message);
         return res.status(401).json({
             mensaje: "Token no válido o expirado"
         });

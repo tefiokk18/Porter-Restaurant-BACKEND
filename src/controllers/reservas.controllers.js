@@ -2,19 +2,20 @@ import Reserva from '../models/Reserva.js';
 
 export const crearReserva = async (req, res) => {
     try {
-
         const { fecha, horario, sucursal } = req.body;
-
-
         const reservaExistente = await Reserva.findOne({ fecha, horario, sucursal });
 
         if (reservaExistente) {
             return res.status(400).json({
-                mensaje: "Lo sentimos, ya existe una reserva para esa fecha, hora y sucursal. Por favor, elegí otro horario o sucursal."
+                mensaje: "Lo sentimos, ya existe una reserva para esa fecha, hora y sucursal."
             });
         }
 
-        const nuevaReserva = new Reserva(req.body);
+        const nuevaReserva = new Reserva({
+            ...req.body,
+            usuario: req.id 
+        });
+
         await nuevaReserva.save();
 
         res.status(201).json({
@@ -22,18 +23,29 @@ export const crearReserva = async (req, res) => {
             reserva: nuevaReserva
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al crear reserva:", error);
         res.status(500).json({ mensaje: "Error al crear la reserva" });
     }
 };
 
 export const obtenerReservas = async (req, res) => {
     try {
-        const reservas = await Reserva.find();
+        console.log("ID del usuario que pide:", req.id);
+        console.log("ROL del usuario que pide:", req.rol); 
+
+        let reservas;
+        if (req.rol === 'ADMIN_ROLE') {
+            console.log("Entró como ADMIN");
+            reservas = await Reserva.find(); 
+        } else {
+            console.log("Entró como USUARIO");
+            reservas = await Reserva.find({ usuario: req.id }); 
+        }
+        
+        console.log("Cantidad de reservas encontradas:", reservas.length);
         res.status(200).json(reservas);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ mensaje: "Error al obtener las reservas" });
+        res.status(500).json({ mensaje: "Error" });
     }
 };
 
@@ -54,10 +66,11 @@ export const editarReserva = async (req, res) => {
             reserva: reservaActualizada
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al editar reserva:", error);
         res.status(500).json({ mensaje: "Error al intentar editar la reserva" });
     }
 };
+
 
 export const eliminarReserva = async (req, res) => {
     try {
@@ -74,7 +87,7 @@ export const eliminarReserva = async (req, res) => {
             mensaje: "Reserva eliminada correctamente"
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error al eliminar reserva:", error);
         res.status(500).json({
             mensaje: "Error al intentar eliminar la reserva"
         });
