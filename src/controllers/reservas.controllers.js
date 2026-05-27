@@ -13,7 +13,7 @@ export const crearReserva = async (req, res) => {
 
         const nuevaReserva = new Reserva({
             ...req.body,
-            usuario: req.id 
+            usuario: req.id
         });
 
         await nuevaReserva.save();
@@ -30,19 +30,12 @@ export const crearReserva = async (req, res) => {
 
 export const obtenerReservas = async (req, res) => {
     try {
-        console.log("ID del usuario que pide:", req.id);
-        console.log("ROL del usuario que pide:", req.rol); 
-
         let reservas;
         if (req.rol === 'ADMIN_ROLE') {
-            console.log("Entró como ADMIN");
-            reservas = await Reserva.find(); 
+            reservas = await Reserva.find();
         } else {
-            console.log("Entró como USUARIO");
-            reservas = await Reserva.find({ usuario: req.id }); 
+            reservas = await Reserva.find({ usuario: req.id });
         }
-        
-        console.log("Cantidad de reservas encontradas:", reservas.length);
         res.status(200).json(reservas);
     } catch (error) {
         res.status(500).json({ mensaje: "Error" });
