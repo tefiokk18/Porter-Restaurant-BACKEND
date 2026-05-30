@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import Usuario from './src/models/Usuario.js';
+import Usuario from '../src/models/Usuario.js';
 
 const crearAdmin = async () => {
     const email = process.argv[2];
@@ -21,6 +21,7 @@ const crearAdmin = async () => {
             nombre: "Administrador",
             email,
             password: hashedPassword,
+            telefono: "0000000000",
             rol: 'admin'
         });
 
