@@ -44,6 +44,7 @@ export const loginUsuario = async (req, res) => {
         if (!passwordValido) {
             return res.status(401).json({ mensaje: "Email o contraseña incorrectos" });
         }
+        
         if (!usuarioEncontrado.activo) { return res.status(403).json({ mensaje: "Cuenta suspendida. Contactá al administrador." }); }
 
 
