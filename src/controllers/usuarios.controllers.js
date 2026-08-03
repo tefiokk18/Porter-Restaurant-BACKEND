@@ -37,22 +37,19 @@ export const loginUsuario = async (req, res) => {
 
         const usuarioEncontrado = await Usuario.findOne({ email });
         if (!usuarioEncontrado) {
-            return res.status(404).json({ mensaje: "Email o contraseña incorrectos" });
+            return res.status(401).json({ mensaje: "Email o contraseña incorrectos" });
         }
 
         const passwordValido = bcrypt.compareSync(password, usuarioEncontrado.password);
         if (!passwordValido) {
-            return res.status(400).json({ mensaje: "Email o contraseña incorrectos" });
+            return res.status(401).json({ mensaje: "Email o contraseña incorrectos" });
         }
+        if (!usuarioEncontrado.activo) { return res.status(403).json({ mensaje: "Cuenta suspendida. Contactá al administrador." }); }
 
 
         const token = jwt.sign(
-            {
-                uid: usuarioEncontrado._id,
-                email: usuarioEncontrado.email,
-                rol: usuarioEncontrado.rol
-            },
-            process.env.JWT_SECRET,
+            { uid: usuarioEncontrado._id, email: usuarioEncontrado.email, rol: usuarioEncontrado.rol },
+            "mi_clave_secreta_super_especial_123", 
             { expiresIn: '3h' }
         );
 
