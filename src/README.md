@@ -1,6 +1,6 @@
 # 🍔 Porter Restaurant - Backend
 
-Este es el servidor de la aplicación **Porter Restaurant**, desarrollado como proyecto final para  **RollingCode School**. 
+Este es el servidor de la aplicación **Porter Restaurant**, desarrollado como proyecto final para **RollingCode School**. 
 
 La API permite gestionar usuarios (roles de admin/usuario) y un sistema de reservas de mesas con validaciones en tiempo real.
 
@@ -18,3 +18,4 @@ La API permite gestionar usuarios (roles de admin/usuario) y un sistema de reser
    ```bash
    git clone <url-de-tu-repo>
    cd Porter-Restaurant-BACKEND
+   

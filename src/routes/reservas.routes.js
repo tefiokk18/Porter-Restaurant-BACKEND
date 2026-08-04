@@ -1,3 +1,4 @@
+import validarReserva from '../middlewares/validarReserva.js';
 import { Router } from 'express';
 import { 
     crearReserva, 
@@ -16,10 +17,10 @@ router.route('/mis-reservas')
 
 router.route('/reservas')
     .get([validarJWT], obtenerReservas) 
-    .post([validarJWT], crearReserva);  
+    .post([validarJWT, validarReserva], crearReserva);  
 
 router.route('/reservas/:id')
-    .put([validarJWT], editarReserva)
+    .put([validarJWT, validarReserva], editarReserva)
     .delete([validarJWT], eliminarReserva);
 
 export default router;

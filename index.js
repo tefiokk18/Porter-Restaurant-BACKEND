@@ -6,11 +6,15 @@ import usuariosRoutes from './src/routes/usuarios.routes.js';
 import reservasRoutes from './src/routes/reservas.routes.js';
 
 dotenv.config();
+
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 
 app.use('/api', usuariosRoutes);
 app.use('/api', reservasRoutes);
@@ -24,9 +28,7 @@ mongoose.connect(mongoURI)
 
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
 
 app.use((req, res) => {
     res.status(404).json({
