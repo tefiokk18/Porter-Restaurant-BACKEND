@@ -53,13 +53,16 @@ export const editarReserva = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const reservaActualizada = await Reserva.findByIdAndUpdate(id, req.body, { new: true });
-
-        if (!reservaActualizada) {
-            return res.status(404).json({
-                mensaje: "No se encontró la reserva que intentas editar"
-            });
+        const reserva = await Reserva.findById(id);
+        if (!reserva) {
+            return res.status(404).json({ mensaje: "No se encontró la reserva que intentas editar" });
         }
+
+        if (req.rol !== 'ADMIN_ROLE' && reserva.usuario.toString() !== req.id) {
+            return res.status(403).json({ mensaje: "No estás autorizado para editar esta reserva" });
+        }
+
+        const reservaActualizada = await Reserva.findByIdAndUpdate(id, req.body, { new: true });
 
         res.status(200).json({
             mensaje: "Reserva actualizada con éxito",
@@ -71,25 +74,26 @@ export const editarReserva = async (req, res) => {
     }
 };
 
-
 export const eliminarReserva = async (req, res) => {
     try {
         const { id } = req.params;
-        const reservaEliminada = await Reserva.findByIdAndDelete(id);
 
-        if (!reservaEliminada) {
-            return res.status(404).json({
-                mensaje: "No se encontró la reserva que intentas eliminar"
-            });
+        const reserva = await Reserva.findById(id);
+        if (!reserva) {
+            return res.status(404).json({ mensaje: "No se encontró la reserva que intentas eliminar" });
         }
+
+        if (req.rol !== 'ADMIN_ROLE' && reserva.usuario.toString() !== req.id) {
+            return res.status(403).json({ mensaje: "No estás autorizado para eliminar esta reserva" });
+        }
+
+        await Reserva.findByIdAndDelete(id);
 
         res.status(200).json({
             mensaje: "Reserva eliminada correctamente"
         });
     } catch (error) {
         console.error("Error al eliminar reserva:", error);
-        res.status(500).json({
-            mensaje: "Error al intentar eliminar la reserva"
-        });
+        res.status(500).json({ mensaje: "Error al intentar eliminar la reserva" });
     }
 };
