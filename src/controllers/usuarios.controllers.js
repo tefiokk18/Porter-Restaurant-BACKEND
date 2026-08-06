@@ -4,16 +4,21 @@ import jwt from 'jsonwebtoken';
 
 export const registrarUsuario = async (req, res) => {
     try {
-
         const { nombre, email, password, telefono } = req.body;
-
 
         let usuario = await Usuario.findOne({ email });
         if (usuario) {
             return res.status(400).json({ mensaje: "El email ya está registrado" });
         }
 
-        usuario = new Usuario(req.body);
+        usuario = new Usuario({
+            nombre,
+            email,
+            password,
+            telefono,
+            rol: 'USER_ROLE', 
+            activo: true
+        });
 
         const salt = bcrypt.genSaltSync(10);
         usuario.password = bcrypt.hashSync(password, salt);
@@ -22,11 +27,11 @@ export const registrarUsuario = async (req, res) => {
 
         res.status(201).json({
             mensaje: "Usuario registrado con éxito",
-            nombre: usuario.nombre
+            usuario
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ mensaje: "Error al registrar el usuario" });
+        console.error("Error al registrar usuario:", error);
+        res.status(500).json({ mensaje: "Error al intentar registrar el usuario" });
     }
 };
 
@@ -44,13 +49,13 @@ export const loginUsuario = async (req, res) => {
         if (!passwordValido) {
             return res.status(401).json({ mensaje: "Email o contraseña incorrectos" });
         }
-        
+
         if (!usuarioEncontrado.activo) { return res.status(403).json({ mensaje: "Cuenta suspendida. Contactá al administrador." }); }
 
 
         const token = jwt.sign(
             { uid: usuarioEncontrado._id, email: usuarioEncontrado.email, rol: usuarioEncontrado.rol },
-            "mi_clave_secreta_super_especial_123", 
+            "mi_clave_secreta_super_especial_123",
             { expiresIn: '3h' }
         );
 
