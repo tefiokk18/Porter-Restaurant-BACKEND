@@ -54,8 +54,13 @@ export const loginUsuario = async (req, res) => {
 
 
         const token = jwt.sign(
-            { uid: usuarioEncontrado._id, email: usuarioEncontrado.email, rol: usuarioEncontrado.rol },
-            "mi_clave_secreta_super_especial_123",
+            {
+                uid: usuarioEncontrado._id,
+                email: usuarioEncontrado.email,
+                rol: usuarioEncontrado.rol,
+                nombre: usuarioEncontrado.nombre
+            },
+            process.env.JWT_SECRET,
             { expiresIn: '3h' }
         );
 
